@@ -1,0 +1,65 @@
+﻿@using BlazorApp1.Data;
+@page "/shoppinglist"
+
+<h3>Shopping List</h3>
+<input placeholder="Grocery name" @bind="groceryName"/>
+<input placeholder="Grocery price" @bind="groceryPrice"/>
+<button @onclick="AddGrocery">Add Grocery</button>
+<table class="table table-sm">
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+    </tr>
+    @foreach (var grocery in groceries)
+    {
+        <Item GroceryItem="@grocery" OnGroceryPriceIncreased="OnGroceryPriceIncreased"/>
+    }
+</table>
+
+<h5 id="total">Total: @sum$</h5>  
+<h6>Number of items in the list: @totalItems</h6>
+<p>@warning</p>
+
+@code {
+    private string warning = "";
+    private int totalItems;
+    private float sum;
+    private string groceryName;
+    private float groceryPrice;
+    private List<Grocery> groceries = new();
+
+    private void AddGrocery()
+    {
+        if(!string.IsNullOrWhiteSpace(groceryName) && groceryPrice > 0)
+        {
+            groceries.Add(new Grocery
+            {
+                    Name = groceryName,
+                    Price = groceryPrice
+            });
+            totalItems = groceries.Count;
+            sum += groceryPrice;
+            groceryName = string.Empty;
+            groceryPrice = 0;
+            warning = "";
+        } 
+        else
+        {
+            warning = "You should fill the fields.";
+            Thread.Sleep(1000);
+
+        }
+        warning = "";
+
+        UpdateTotalAmount();
+    }
+    public void UpdateTotalAmount()
+    {
+        sum = groceries.Sum(x => x.Price);
+    }
+
+    public void OnGroceryPriceIncreased()
+    {
+        UpdateTotalAmount();
+    }
+}
