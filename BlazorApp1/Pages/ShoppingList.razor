@@ -2,13 +2,29 @@
 @page "/shoppinglist"
 
 <h3>Shopping List</h3>
-<input placeholder="Grocery name" @bind="groceryName"/>
-<input placeholder="Grocery price" @bind="groceryPrice"/>
-<button @onclick="AddGrocery">Add Grocery</button>
-<table class="table table-sm">
+
+<EditForm Model="@grocery" OnSubmit="AddGrocery">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+    <p>
+        <label>
+            Name: 
+            <InputText @bind-Value="grocery.Name" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Price:
+            <InputNumber @bind-Value="grocery.Price" />
+        </label>
+    </p>
+    <button type="submit">Add grocery</button>
+</EditForm>
+
+<table class="p-3">
     <tr>
-        <th>Name</th>
-        <th>Price</th>
+        <th class="p-1">Name</th>
+        <th class="p-1">Price</th>
     </tr>
     @foreach (var grocery in groceries)
     {
@@ -18,40 +34,23 @@
 
 <h5 id="total">Total: @sum$</h5>  
 <h6>Number of items in the list: @totalItems</h6>
-<p>@warning</p>
 
 @code {
-    private string warning = "";
     private int totalItems;
     private float sum;
     private string groceryName;
     private float groceryPrice;
+    private Grocery grocery = new();
     private List<Grocery> groceries = new();
 
     private void AddGrocery()
     {
-        if(!string.IsNullOrWhiteSpace(groceryName) && groceryPrice > 0)
-        {
-            groceries.Add(new Grocery
-            {
-                    Name = groceryName,
-                    Price = groceryPrice
-            });
+            groceries.Add(grocery);
+            grocery = new();
             totalItems = groceries.Count;
-            sum += groceryPrice;
             groceryName = string.Empty;
             groceryPrice = 0;
-            warning = "";
-        } 
-        else
-        {
-            warning = "You should fill the fields.";
-            Thread.Sleep(1000);
-
-        }
-        warning = "";
-
-        UpdateTotalAmount();
+            UpdateTotalAmount();
     }
     public void UpdateTotalAmount()
     {
@@ -62,7 +61,6 @@
     {
         UpdateTotalAmount();
     }
+
 }
-
-
-            @*notenotne*@
+   

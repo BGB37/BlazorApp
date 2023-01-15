@@ -1,13 +1,12 @@
 ﻿@using BlazorApp1.Data;
 @*No need for routing because we don't want this page to be displayed.*@
 
-<tr>
-    <td>@GroceryItem.Name</td>
-    <td>@GroceryItem.Price</td>
-    <td>
-        <button class="btn-sm" @onclick="AddPrice">+ Add 100</button>
-    </td>
-</tr>
+    <tr>
+    <td class="p-1 align-content-center">@GroceryItem.Name</td>
+        <td class="p-1 align-content-center">@GroceryItem.Price</td>
+        <td class="p-1"><button class="btn-sm" @onclick="AddPrice">+ Add 100</button></td>
+    </tr>
+
 
 @code {
     [Parameter]
